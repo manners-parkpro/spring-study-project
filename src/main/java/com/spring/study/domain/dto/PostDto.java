@@ -25,7 +25,6 @@ public class PostDto {
 
     /**
      * 게시판 Dto 생성
-     *
      * @param p    게시판
      * @param isDetail 게시물 리스트 생성 여부
      */
