@@ -11,8 +11,6 @@ public class NotFoundException extends Exception {
     public static final int CODE_NOT_FOUND = 600;
     public static final int GROUP_CODE_NOT_FOUND = 601;
     public static final int PRODUCT_NOT_FOUND = 700;
-    public static final int ESTIMATE_NOT_FOUND = 800;
-
     private int code;
 
     public NotFoundException(String message, int code) {
