@@ -17,7 +17,7 @@ public class ExceptionController {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ApiResult invalidRequestHandler(MethodArgumentNotValidException e) {
-        log.error("invalidRequestHandler Error : " + e);
+        log.error("MethodArgumentNotValidException Error : " + e);
 
         ApiResult response = new ApiResult(400, "잘못된 요청입니다.");
         for (FieldError fe : e.getFieldErrors()) {
@@ -26,4 +26,13 @@ public class ExceptionController {
 
         return response;
     }
+
+    /** Controller 에서 ApiResult code로 처리 하기 때문에 주석처리.
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(NotFoundException.class)
+    public ApiResult notFoundException(NotFoundException e) {
+        log.error("NotFoundException Error : " + e);
+        return new ApiResult(404, e.getMessage());
+    }
+    **/
 }
