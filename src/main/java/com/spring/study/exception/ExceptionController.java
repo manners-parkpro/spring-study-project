@@ -35,4 +35,23 @@ public class ExceptionController {
         return new ApiResult(404, e.getMessage());
     }
     **/
+
+    /** 최상위 Exception을 만들어서 Handling을 하는 방법도 좋다.
+    @ResponseBody
+    @ExceptionHandler(ParentException.class)
+    public ResponseEntity<ErrorResponse> ParentException(ParentException e) {
+        int statusCode = e.getStatusCode();
+
+        ErrorResponse body = ErrorResponse.builder()
+                .code(String.valueOf(statusCode))
+                .message(e.getMessage())
+                .validation(e.getValidation())
+                .build();
+
+        ResponseEntity<ErrorResponse> response = ResponseEntity.status(statusCode)
+                .body(body);
+
+        return response;
+    }
+    **/
 }
