@@ -40,7 +40,7 @@ public class PostService {
         if (optPost.isEmpty())
             throw new NotFoundException("Post not found", NotFoundException.POST_NOT_FOUND);
 
-        return new PostDto(optPost.get(), true);
+        return new PostDto(optPost.get());
     }
 
     @Transactional
@@ -59,6 +59,9 @@ public class PostService {
 
         if (dto.getActiveYn() != null)
             post.setActiveYn(dto.getActiveYn());
+
+        if (dto.getDeleteYn() != null)
+            post.setDeleteYn(dto.getDeleteYn());
 
         repository.save(post);
 

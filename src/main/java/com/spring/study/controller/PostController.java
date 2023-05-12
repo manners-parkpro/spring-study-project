@@ -4,6 +4,7 @@ import com.spring.study.domain.dto.ApiResult;
 import com.spring.study.domain.dto.BaseSearchDto;
 import com.spring.study.domain.dto.PostDto;
 import com.spring.study.exception.NotFoundException;
+import com.spring.study.exception.RequiredParamNonException;
 import com.spring.study.service.PostService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -12,9 +13,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @Log4j2
-@Controller
+@RestController
 @RequiredArgsConstructor
 @RequestMapping("/post/")
 public class PostController {
@@ -22,25 +24,24 @@ public class PostController {
     private final PostService service;
 
     @GetMapping("list")
-    public ModelAndView list(BaseSearchDto dto) {
-        ModelAndView modelAndView = new ModelAndView("post/list");
-        modelAndView.addObject("list", service.getAllPosts(dto));
+    public ApiResult<List<PostDto>> list(BaseSearchDto dto) {
+        ApiResult<List<PostDto>> result = new ApiResult<>(ApiResult.RESULT_CODE_OK);
+        result.setData(service.getAllPosts(dto));
 
-        return modelAndView;
+        return result;
     }
 
-    @GetMapping({"new", "{id}"})
-    public ModelAndView edit(@PathVariable(name = "id", required = false) Long id) throws NotFoundException {
-        ModelAndView modelAndView = new ModelAndView("post/edit");
+    @GetMapping("{id}")
+    public PostDto edit(@PathVariable Long id) throws NotFoundException, RequiredParamNonException {
 
-        if (id != null)
-            modelAndView.addObject("dto", service.findById(id));
+        if (id == null)
+            throw new RequiredParamNonException("RequiredParamNonException");
 
-        return modelAndView;
+        return service.findById(id);
     }
 
     @PostMapping("ajax/save")
-    public @ResponseBody ApiResult<Long> save(@RequestBody PostDto dto) {
+    public ApiResult<Long> save(@RequestBody PostDto dto) {
         ApiResult<Long> result = new ApiResult<>(ApiResult.RESULT_CODE_OK);
 
         try {
@@ -55,7 +56,7 @@ public class PostController {
     }
 
     @RequestMapping("ajax/delete")
-    public @ResponseBody ApiResult<Long> delete(@RequestBody PostDto dto) throws NotFoundException {
+    public ApiResult<Long> delete(@RequestBody PostDto dto) throws NotFoundException {
         ApiResult<Long> result = new ApiResult<>(ApiResult.RESULT_CODE_OK);
 
         if (dto.getId() != null) {

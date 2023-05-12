@@ -5,8 +5,8 @@ import com.spring.study.domain.types.YNType;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 
 @Setter
@@ -20,7 +20,9 @@ public class PostDto {
     private String content;
     private YNType activeYn;
     private YNType deleteYn;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDateTime createdAt;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDateTime updatedAt;
 
     /**
@@ -33,11 +35,16 @@ public class PostDto {
         this.title = p.getTitle();
         this.content = p.getContent();
         this.createdAt = p.getCreatedAt();
+        this.activeYn = p.getActiveYn();
+        this.deleteYn = p.getDeleteYn();
         
-        if (isDetail) {
-            this.activeYn = p.getActiveYn();
-            this.deleteYn = p.getDeleteYn();
+        if (isDetail)
             this.updatedAt = p.getUpdatedAt();
-        }
+    }
+
+    public PostDto(Post p) {
+        this.id = p.getId();
+        this.title = p.getTitle();
+        this.content = p.getContent();
     }
 }
