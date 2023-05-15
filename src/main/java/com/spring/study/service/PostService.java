@@ -1,11 +1,15 @@
 package com.spring.study.service;
 
 import com.spring.study.domain.dto.BaseSearchDto;
+import com.spring.study.domain.dto.LoginUser;
 import com.spring.study.domain.dto.PostDto;
+import com.spring.study.domain.entity.Account;
 import com.spring.study.domain.entity.Post;
 import com.spring.study.domain.types.YNType;
 import com.spring.study.exception.NotFoundException;
 import com.spring.study.exception.RequiredParamNonException;
+import com.spring.study.exception.UserNotFoundException;
+import com.spring.study.repository.account.AccountRepository;
 import com.spring.study.repository.post.PostRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -25,6 +29,7 @@ import java.util.stream.Collectors;
 public class PostService {
 
     private final PostRepository repository;
+    private final AccountRepository accountRepository;
 
     public List<PostDto> getAllPosts(BaseSearchDto dto) {
         return repository.findPosts(dto).stream().map(p -> new PostDto(p, false)).collect(Collectors.toList());
@@ -44,15 +49,20 @@ public class PostService {
     }
 
     @Transactional
-    public Long save(PostDto dto) throws Exception {
+    public Long save(PostDto dto, LoginUser loginUser) throws Exception {
         if (dto == null)
             throw new RequiredParamNonException("Dto must not be null");
 
+        Account account = accountRepository.findById(loginUser.getId()).orElseThrow(() -> new UserNotFoundException("Post UserNotFoundException"));
+
         Post post;
-        if (dto.getId() == null)
+        if (dto.getId() == null) {
             post = new Post();
-        else
+            post.setAccount(account);
+        } else {
             post = repository.findById(dto.getId()).orElseThrow(() -> new Exception("not found Post"));
+            post.setLastModifier(account);
+        }
 
         post.setTitle(dto.getTitle());
         post.setContent(dto.getContent());
@@ -69,14 +79,17 @@ public class PostService {
     }
 
     @Transactional
-    public void delete(Long[] ids) throws NotFoundException {
+    public void delete(Long[] ids, LoginUser loginUser) throws NotFoundException {
         if (ids != null) {
             List<Post> list = repository.findAllById(Arrays.asList(ids));
             if (CollectionUtils.isEmpty(list))
                 throw new NotFoundException("Post not found", NotFoundException.POST_NOT_FOUND);
 
+            Account account = accountRepository.findById(loginUser.getId()).orElseThrow(() -> new UserNotFoundException("Post Delete UserNotFoundException"));
+
             for (Post post : list) {
                 post.setDeleteYn(YNType.Y);
+                post.setLastModifier(account);
             }
 
             repository.saveAll(list);

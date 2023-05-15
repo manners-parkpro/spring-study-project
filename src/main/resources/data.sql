@@ -1,0 +1,1 @@
+insert into Account (ID, USERNAME, EMAIL, TEL, PASSWORD, ACTIVE_YN, DORMANT_YN, DELETE_YN, LAST_LOGIN_AT, CREATED_AT, UPDATED_AT) values (1, 'park-pro', 'park-pro@lulumedic.com', '010-1234-5678', 'amore123', 'Y', 'N', 'N', now(), now(), now())

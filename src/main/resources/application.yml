@@ -5,6 +5,12 @@ spring:
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect #DB 상세지정
     hibernate.ddl-auto: update #스키마 생성 OPTION
+    #defer-datasource-initialization: true #Data.SQL에 있는 Query가 실행되도록 처리
+
+  #Data.SQL에 있는 Query가 실행되도록 처리
+  #sql:
+    #init:
+      #mode: always
 
   # H2 Setting Info (H2 Console에 접속하기 위한 설정정보 입력)
   h2:
