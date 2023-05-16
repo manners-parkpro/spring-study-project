@@ -1,6 +1,5 @@
 package com.spring.study.configuration;
 
-import com.spring.study.domain.dto.AccountDto;
 import com.spring.study.domain.dto.LoginUser;
 import com.spring.study.domain.entity.AccountSession;
 import com.spring.study.exception.RequiredParamNonException;

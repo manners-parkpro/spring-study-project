@@ -30,7 +30,7 @@ public class AccountDto {
     private YNType dormantYn;
     private YNType deleteYn;
 
-    private List<AccountSession> sessions = new ArrayList<>();
+    private List<AccountSessionDto> sessions = new ArrayList<>();
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
     private LocalDateTime lastLoginAt;
@@ -65,7 +65,7 @@ public class AccountDto {
 
         if (!CollectionUtils.isEmpty(a.getSessions())) {
             for (AccountSession session : a.getSessions()) {
-                this.sessions.add(session);
+                this.sessions.add(new AccountSessionDto(session));
             }
         }
 
