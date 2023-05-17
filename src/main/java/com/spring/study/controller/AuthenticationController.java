@@ -39,7 +39,17 @@ public class LoginController {
                 .sameSite("Strict")
                 .build();
 
-        return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, cookie.toString()).build();
+        return ResponseEntity.ok().build();
+    }
+
+    @Deprecated
+    public ApiResult deprecated(@RequestBody AccountDto dto) throws UserNotFoundException {
+        ApiResult<AccountDto> result = new ApiResult<>(ApiResult.RESULT_CODE_OK);
+
+        AccountDto data = service.findAccountByEmailAndPassword(dto);
+        result.setData(data);
+
+        return result;
     }
 
     @PostMapping("login")
